@@ -68,20 +68,26 @@ BaseClientApplication *SpawnApplication(Variant configuration);
 BaseProtocolFactory *SpawnFactory(Variant configuration);
 #endif /* COMPILE_STATIC */
 
-int main(int argc, const char **argv) {
-	//1. Pick up the startup parameters and hold them inside the running status
-	if (argc < 2) {
-		fprintf(stdout, "Invalid command line. Use --help\n");
-		return -1;
-	}
+int main(int argc, const char **argv) {    
+#if 0
+    string configFile = "/develop/demo_crtmp/crtmpserver/builders/cmake/crtmpserver/crtmpserver.lua";
+    configFile = normalizePath(configFile, "");
+    NormalizeCommandLine(configFile);
+#else
+    //1. Pick up the startup parameters and hold them inside the running status
+    if (argc < 2) {
+        fprintf(stdout, "Invalid command line. Use --help\n");
+        return -1;
+    }
 
-	if (!Variant::DeserializeFromCmdLineArgs(argc, argv, gRs.commandLine)) {
-		PrintHelp();
-		return -1;
-	}
-	string configFile = argv[argc - 1];
-	configFile = normalizePath(configFile, "");
-	NormalizeCommandLine(configFile);
+    if (!Variant::DeserializeFromCmdLineArgs(argc, argv, gRs.commandLine)) {
+        PrintHelp();
+        return -1;
+    }
+    string configFile = argv[argc - 1];
+    configFile = normalizePath(configFile, "");
+    NormalizeCommandLine(configFile);
+#endif
 
 	if ((bool)gRs.commandLine["arguments"]["--help"]) {
 		PrintHelp();
@@ -96,7 +102,7 @@ int main(int argc, const char **argv) {
 	if (configFile == "") {
 		fprintf(stderr, "Configuration file not found: `%s`\n", argv[argc - 1]);
 		return -1;
-	}
+    }
 
 	SRAND();
 	InitNetworking();

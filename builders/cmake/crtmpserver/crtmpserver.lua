@@ -26,17 +26,17 @@ configuration=
 			-- bigger the level, more messages are recorded
 			level=6
 		},
-		{
-			name="file appender",
-			type="file",
-			level=6,
+		--{
+		--	name="file appender",
+		--	type="file",
+		--	level=6,
 			-- the file where the log messages are going to land
-			fileName="/tmp/crtmpserver",
+		--	fileName="/tmp/crtmpserver",
 			--newLineCharacters="\r\n",
-			fileHistorySize=10,
-			fileLength=1024*256,
-			singleLine=true
-		}
+		--	fileHistorySize=10,
+		--	fileLength=1024*256,
+		--	singleLine=true
+		--}
 	},
 	
 	-- this node holds all the RTMP applications
@@ -87,18 +87,18 @@ configuration=
 					port=1935,
 					protocol="inboundRtmp"
 				},
-				{
-					ip="0.0.0.0",
-					port=8081,
-					protocol="inboundRtmps",
-					sslKey="server.key",
-					sslCert="server.crt"
-				},
-				{
-					ip="0.0.0.0",
-					port=8080,
-					protocol="inboundRtmpt"
-                },
+				--{
+				--	ip="0.0.0.0",
+				--	port=8081,
+				--	protocol="inboundRtmps",
+				--	sslKey="server.key",
+				--	sslCert="server.crt"
+				--},
+				--{
+				--	ip="0.0.0.0",
+				--	port=8080,
+				--	protocol="inboundRtmpt"
+                		--},
 			}
 		},
 		{
