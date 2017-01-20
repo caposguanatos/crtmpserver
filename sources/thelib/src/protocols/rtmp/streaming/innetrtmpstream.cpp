@@ -356,13 +356,25 @@ bool InNetRTMPStream::FeedData(uint8_t *pData, uint32_t dataLength,
 	while (pIterator != NULL) {
 		pCurrent = pIterator;
 		pIterator = pIterator->pPrev;
-		if (pCurrent->info->IsEnqueueForDelete())
+        BaseOutStream* pOutStream = pCurrent->info;
+
+        if (pOutStream->IsEnqueueForDelete())
 			continue;
-		if (!pCurrent->info->FeedData(pData, dataLength, processedLength, totalLength,
+
+        // check if audio filtering has been enabled (mute audio for all but premium users)
+        if (isAudio && this->GetStreamFlag(BaseInStream::FLAG_MUTE)) {
+            // check if the output has the FLAG_BYPASSMUTE flag enabled (premium user)
+            if(pOutStream->GetStreamFlag(BaseOutStream::FLAG_BYPASSMUTE) == false) {
+                // skip audio frame
+                continue;
+            }
+        }
+
+        if (!pOutStream->FeedData(pData, dataLength, processedLength, totalLength,
 				pts, dts, isAudio)) {
 			if ((pIterator != NULL)&&(pIterator->pNext == pCurrent)) {
-				pCurrent->info->EnqueueForDelete();
-				if (GetProtocol() == pCurrent->info->GetProtocol()) {
+                pOutStream->EnqueueForDelete();
+                if (GetProtocol() == pOutStream->GetProtocol()) {
 					return false;
 				}
 			}

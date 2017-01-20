@@ -55,9 +55,14 @@ protected:
 			uint64_t droppedPacketsCount;
 		} audio, video;
 	} _stats;
+
+        int _streamFlags;
 public:
 	BaseStream(BaseProtocol *pProtocol, uint64_t type, string name);
 	virtual ~BaseStream();
+
+        void SetStreamFlag(int flagId, bool enable);
+        bool GetStreamFlag(int flagId);
 
 	virtual bool SetStreamsManager(StreamsManager *pStreamsManager);
 	/*!

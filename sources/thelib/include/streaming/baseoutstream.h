@@ -156,8 +156,15 @@ struct GenericProcessDataSetup {
 	StreamCapabilities *_pStreamCapabilities;
 };
 
-class DLLEXP BaseOutStream
-: public BaseStream {
+class DLLEXP BaseOutStream : public BaseStream {
+public:
+    enum {
+        FLAG_NONE = 0,
+        FLAG_BYPASSMUTE,
+
+        FLAG_COUNT
+    };
+
 private:
 	bool _canCallDetachedFromInStream;
 	string _aliasName;

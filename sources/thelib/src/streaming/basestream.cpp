@@ -48,6 +48,23 @@ BaseStream::~BaseStream() {
 	}
 }
 
+void BaseStream::SetStreamFlag(int flagId, bool enable)
+{
+    if(enable)
+    {
+        _streamFlags |= (1 << flagId);
+    }
+    else
+    {
+        _streamFlags &= ~(1 << flagId);
+    }
+}
+
+bool BaseStream::GetStreamFlag(int flagId)
+{
+    return (_streamFlags & (1 << flagId)) != 0;
+}
+
 bool BaseStream::SetStreamsManager(StreamsManager *pStreamsManager) {
 	if (pStreamsManager == NULL) {
 		FATAL("no streams manager provided for stream %s(%"PRIu32")",

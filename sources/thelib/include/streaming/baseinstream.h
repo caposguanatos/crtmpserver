@@ -28,16 +28,24 @@ class BaseOutStream;
 /*!
 	@class BaseInStream
  */
-class DLLEXP BaseInStream
-: public BaseStream {
+class DLLEXP BaseInStream : public BaseStream {
+public:
+        enum {
+            FLAG_NONE = 0,
+            FLAG_MUTE,
+
+            FLAG_COUNT
+        };
+
 private:
 	bool _canCallOutStreamDetached;
 protected:
 	map<uint32_t, BaseOutStream *> _linkedStreams;
 	LinkedListNode<BaseOutStream *> *_pOutStreams;
+
 public:
 	BaseInStream(BaseProtocol *pProtocol, uint64_t type, string name);
-	virtual ~BaseInStream();
+        virtual ~BaseInStream();
 
 	vector<BaseOutStream *> GetOutStreams();
 

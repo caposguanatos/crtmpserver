@@ -25,6 +25,8 @@
 #include "application/baseclientapplication.h"
 #include "streaming/baseinnetstream.h"
 #include "streaming/streamstypes.h"
+#include "protocols/protocolmanager.h"
+
 using namespace app_flvplayback;
 
 RTMPAppProtocolHandler::RTMPAppProtocolHandler(Variant &configuration)
@@ -33,19 +35,50 @@ RTMPAppProtocolHandler::RTMPAppProtocolHandler(Variant &configuration)
 }
 
 RTMPAppProtocolHandler::~RTMPAppProtocolHandler() {
+
 }
 
 bool RTMPAppProtocolHandler::ProcessInvokeGeneric(BaseRTMPProtocol *pFrom,
 		Variant &request) {
 
+
 	string functionName = M_INVOKE_FUNCTION(request);
-	if (functionName == "getAvailableFlvs") {
+    if (functionName == "toggleAudioFlag") {
+        return ProcessToggleAudioFlag(pFrom, request);
+    } else if (functionName == "getAvailableFlvs") {
 		return ProcessGetAvailableFlvs(pFrom, request);
 	} else if (functionName == "insertMetadata") {
 		return ProcessInsertMetadata(pFrom, request);
 	} else {
 		return BaseRTMPAppProtocolHandler::ProcessInvokeGeneric(pFrom, request);
 	}
+}
+
+bool RTMPAppProtocolHandler::ProcessToggleAudioFlag(BaseRTMPProtocol *pFrom, Variant &request)
+{
+    if (M_INVOKE_PARAM(request, 1) != V_STRING || M_INVOKE_PARAM(request, 2) != V_BOOL) {
+        FATAL("Invalid request:\n%s", STR(request.ToString()));
+        return false;
+    }
+
+    std::string streamName = M_INVOKE_PARAM(request, 1);
+    bool enableFlag = M_INVOKE_PARAM(request, 2);
+
+    // Get the streams manager
+    StreamsManager *pStreamsManager = GetApplication()->GetStreamsManager();
+
+    // Find the stream
+    map<uint32_t, BaseStream *> streams = pStreamsManager->FindByTypeByName(
+            ST_IN, streamName, true, true);
+    if (streams.size() == 0) {
+        FATAL("Stream %s not found", STR(streamName));
+        return false;
+    }
+
+    BaseInStream* pInStream = (BaseInStream *) MAP_VAL(streams.begin());
+    pInStream->SetStreamFlag(BaseInStream::FLAG_MUTE, enableFlag);
+
+    return true;
 }
 
 bool RTMPAppProtocolHandler::ProcessGetAvailableFlvs(BaseRTMPProtocol *pFrom, Variant &request) {

@@ -25,16 +25,16 @@
 #include "protocols/rtmp/basertmpappprotocolhandler.h"
 
 namespace app_flvplayback {
-
-	class RTMPAppProtocolHandler
-	: public BaseRTMPAppProtocolHandler {
+        class RTMPAppProtocolHandler : public BaseRTMPAppProtocolHandler {
 	public:
 		RTMPAppProtocolHandler(Variant &configuration);
 		virtual ~RTMPAppProtocolHandler();
 
 		virtual bool ProcessInvokeGeneric(BaseRTMPProtocol *pFrom,
 				Variant &request);
-	private:
+        private:
+
+                bool ProcessToggleAudioFlag(BaseRTMPProtocol *pFrom, Variant &request);
 		bool ProcessGetAvailableFlvs(BaseRTMPProtocol *pFrom, Variant &request);
 		bool ProcessInsertMetadata(BaseRTMPProtocol *pFrom, Variant &request);
 	};
